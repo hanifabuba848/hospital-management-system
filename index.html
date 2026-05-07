@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HealthEase | Health Management System</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/a2e0adf6d2.js" crossorigin="anonymous"></script>
+</head>
+
+<body class="bg-gray-50 text-gray-800 font-[Poppins,sans-serif]">
+  <!-- Navbar -->
+  <header class="fixed w-full bg-white shadow-md z-10">
+    <div class="container mx-auto flex justify-between items-center py-4 px-6">
+      <h1 class="text-2xl font-bold text-blue-600">🏥 HealthEase</h1>
+      <nav class="hidden md:flex space-x-6">
+        <a href="#home" class="hover:text-blue-600">Home</a>
+        <a href="#features" class="hover:text-blue-600">Features</a>
+        <a href="#about" class="hover:text-blue-600">About</a>
+        <a href="login.html" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">Login</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section id="home" class="h-screen flex flex-col justify-center items-center text-center bg-cover bg-center"
+    style="background-image: url('images/health-bg.jpg');">
+    <div class="bg-blue-900 bg-opacity-50 p-10 rounded-2xl text-white">
+      <h2 class="text-4xl md:text-6xl font-bold mb-4">Your Health, Our Priority</h2>
+      <p class="text-lg mb-6 max-w-2xl">
+        Manage appointments, view medical records, and connect with your healthcare providers — all in one place.
+      </p>
+      <div class="space-x-4">
+        <a href="register.html" class="bg-white text-blue-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100">
+          Get Started
+        </a>
+        <a href="login.html" class="bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-800">
+          Login
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section id="features" class="py-20 px-6 md:px-20 bg-white text-center">
+    <h3 class="text-3xl font-bold text-blue-700 mb-10">What You Can Do</h3>
+    <div class="grid md:grid-cols-3 gap-10">
+      <div class="p-6 shadow-lg rounded-xl bg-gray-50 hover:shadow-2xl transition">
+        <i class="fas fa-calendar-check text-blue-600 text-4xl mb-4"></i>
+        <h4 class="text-xl font-semibold mb-2">Book Appointments</h4>
+        <p>Schedule, reschedule, and manage your medical appointments seamlessly.</p>
+      </div>
+
+      <div class="p-6 shadow-lg rounded-xl bg-gray-50 hover:shadow-2xl transition">
+        <i class="fas fa-file-medical text-blue-600 text-4xl mb-4"></i>
+        <h4 class="text-xl font-semibold mb-2">Access Records</h4>
+        <p>View your medical history, prescriptions, and test results anytime.</p>
+      </div>
+
+      <div class="p-6 shadow-lg rounded-xl bg-gray-50 hover:shadow-2xl transition">
+        <i class="fas fa-user-md text-blue-600 text-4xl mb-4"></i>
+        <h4 class="text-xl font-semibold mb-2">Connect Doctors</h4>
+        <p>Chat or video call with your doctors and get expert consultations quickly.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section id="about" class="py-20 px-6 md:px-20 bg-blue-50 text-center">
+    <h3 class="text-3xl font-bold text-blue-700 mb-6">About HealthEase</h3>
+    <p class="max-w-3xl mx-auto text-gray-700 text-lg leading-relaxed">
+      HealthEase is a modern Health Management System designed to simplify healthcare management for patients and medical professionals.
+      From booking appointments to tracking prescriptions, HealthEase ensures smooth, efficient, and reliable digital healthcare.
+    </p>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-blue-900 text-white text-center py-6">
+    <p>© 2025 HealthEase | All Rights Reserved</p>
+  </footer>
+</body>
+</html>

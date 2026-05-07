@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat | HealthEase</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/a2e0adf6d2.js" crossorigin="anonymous"></script>
+</head>
+
+<body class="bg-gray-100 font-[Poppins,sans-serif] flex h-screen">
+
+  <!-- Sidebar -->
+  <aside class="hidden md:flex flex-col bg-blue-900 text-white w-64 p-6">
+    <h2 class="text-2xl font-bold mb-6 text-center">🏥 HealthEase</h2>
+    <nav class="space-y-4">
+      <a href="dashboard.html" class="flex items-center hover:bg-blue-800 p-2 rounded-lg"><i class="fas fa-home mr-3"></i>Dashboard</a>
+      <a href="appointments.html" class="flex items-center hover:bg-blue-800 p-2 rounded-lg"><i class="fas fa-calendar-check mr-3"></i>Appointments</a>
+      <a href="records.html" class="flex items-center hover:bg-blue-800 p-2 rounded-lg"><i class="fas fa-notes-medical mr-3"></i>Records</a>
+      <a href="chat.html" class="flex items-center bg-blue-800 p-2 rounded-lg"><i class="fas fa-comments mr-3"></i>Messages</a>
+      <a href="profile.html" class="flex items-center hover:bg-blue-800 p-2 rounded-lg"><i class="fas fa-user-cog mr-3"></i>Profile</a>
+    </nav>
+  </aside>
+
+  <!-- Main Chat Section -->
+  <main class="flex-1 flex flex-col">
+    <!-- Header -->
+    <header class="flex justify-between items-center bg-white shadow px-6 py-4">
+      <div class="flex items-center space-x-3">
+        <img src="images/patient-avatar.jpg" class="w-10 h-10 rounded-full border-2 border-blue-700" alt="">
+        <div>
+          <h2 class="font-bold text-blue-800">Dr. Jane Smith</h2>
+          <p class="text-sm text-gray-500">Online</p>
+        </div>
+      </div>
+      <div>
+        <i class="fas fa-phone-alt text-blue-700 text-lg mr-4 cursor-pointer"></i>
+        <i class="fas fa-video text-blue-700 text-lg cursor-pointer"></i>
+      </div>
+    </header>
+
+    <!-- Chat Messages -->
+    <div id="chat-box" class="flex-1 overflow-y-auto bg-gray-50 p-6 space-y-4">
+      <div class="flex justify-start">
+        <div class="bg-white p-3 rounded-lg shadow max-w-sm">
+          <p>Good morning, Doctor.</p>
+          <span class="text-xs text-gray-400">09:00 AM</span>
+        </div>
+      </div>
+      <div class="flex justify-end">
+        <div class="bg-blue-700 text-white p-3 rounded-lg shadow max-w-sm">
+          <p>Good morning! How are you feeling today?</p>
+          <span class="text-xs text-gray-200">09:02 AM</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chat Input -->
+    <div class="bg-white p-4 flex items-center space-x-3 shadow">
+      <input id="chat-input" type="text" placeholder="Type your message..." class="flex-1 border border-gray-300 rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+      <button id="send-btn" class="bg-blue-700 text-white px-5 py-2 rounded-full hover:bg-blue-800 transition">
+        <i class="fas fa-paper-plane"></i>
+      </button>
+    </div>
+  </main>
+
+  <!-- JavaScript -->
+  <script>
+    const sendBtn = document.getElementById('send-btn');
+    const chatInput = document.getElementById('chat-input');
+    const chatBox = document.getElementById('chat-box');
+
+    function addMessage(message, isUser = true) {
+      const msgDiv = document.createElement('div');
+      msgDiv.className = `flex ${isUser ? 'justify-end' : 'justify-start'}`;
+      msgDiv.innerHTML = `
+        <div class="${isUser ? 'bg-blue-700 text-white' : 'bg-white'} p-3 rounded-lg shadow max-w-sm">
+          <p>${message}</p>
+          <span class="text-xs ${isUser ? 'text-gray-200' : 'text-gray-400'}">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+        </div>`;
+      chatBox.appendChild(msgDiv);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    sendBtn.addEventListener('click', () => {
+      const message = chatInput.value.trim();
+      if (message === "") return;
+      addMessage(message);
+      chatInput.value = "";
+      setTimeout(() => addMessage("Got it! How are your symptoms today?", false), 1200);
+    });
+
+    chatInput.addEventListener('keypress', (e) => {
+      if (e.key === "Enter") sendBtn.click();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Medical Records | HealthPlus</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+</head>
+
+<body class="bg-gray-50 font-[Poppins,sans-serif]">
+
+  <!-- Navbar -->
+  <header class="bg-white shadow-md py-4 fixed w-full top-0 z-10">
+    <div class="container mx-auto flex justify-between items-center px-6">
+      <h1 class="text-2xl font-bold text-blue-600"><i class="fa-solid fa-stethoscope"></i> HealthPlus</h1>
+      <nav class="space-x-6 hidden md:flex">
+        <a href="index.html" class="hover:text-blue-600">Home</a>
+        <a href="appointments.html" class="hover:text-blue-600">Appointments</a>
+        <a href="records.html" class="text-blue-600 font-semibold">Records</a>
+        <a href="contact.html" class="hover:text-blue-600">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Upload Section -->
+  <section class="pt-28 pb-16">
+    <div class="max-w-3xl mx-auto bg-white p-10 rounded-2xl shadow-lg">
+      <h2 class="text-3xl font-bold text-center text-blue-700 mb-6">
+        <i class="fa-solid fa-folder-medical"></i> Upload Medical Record
+      </h2>
+
+      <form id="record-form" class="space-y-6">
+        <div>
+          <label class="block text-gray-700 font-semibold mb-2"><i class="fa-solid fa-file-medical"></i> Record Title</label>
+          <input type="text" id="record-title" class="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="e.g. Blood Test Result" required>
+        </div>
+
+        <div>
+          <label class="block text-gray-700 font-semibold mb-2"><i class="fa-solid fa-tags"></i> Category</label>
+          <select id="record-category" class="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none" required>
+            <option value="">Select Category</option>
+            <option value="Lab Test">🧪 Lab Test</option>
+            <option value="Prescription">💊 Prescription</option>
+            <option value="Scan">🩻 Scan</option>
+            <option value="Vaccination">💉 Vaccination</option>
+            <option value="Other">📁 Other</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-gray-700 font-semibold mb-2"><i class="fa-solid fa-upload"></i> Upload File</label>
+          <input type="file" id="record-file" class="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none" accept=".pdf,.jpg,.jpeg,.png" required>
+        </div>
+
+        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition">
+          <i class="fa-solid fa-cloud-upload-alt"></i> Upload Record
+        </button>
+      </form>
+
+      <p id="upload-success" class="text-green-600 font-semibold text-center mt-6 hidden">
+        ✅ Record uploaded successfully!
+      </p>
+    </div>
+  </section>
+
+  <!-- Records Section -->
+  <section class="pb-20">
+    <div class="max-w-5xl mx-auto bg-white p-8 rounded-2xl shadow-md">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+        <h3 class="text-2xl font-bold text-blue-700 mb-4 md:mb-0"><i class="fa-solid fa-folder-open"></i> Your Medical Records</h3>
+
+        <div class="flex flex-col md:flex-row gap-4">
+          <div class="relative">
+            <input type="text" id="search" placeholder="Search records..." class="border rounded-lg px-4 py-2 pl-10 focus:ring-2 focus:ring-blue-500 outline-none w-full">
+            <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-gray-500"></i>
+          </div>
+
+          <select id="category-filter" class="border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none">
+            <option value="all">All Categories</option>
+            <option value="Lab Test">Lab Tests</option>
+            <option value="Prescription">Prescriptions</option>
+            <option value="Scan">Scans</option>
+            <option value="Vaccination">Vaccinations</option>
+            <option value="Other">Other</option>
+          </select>
+
+          <button id="download-all" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg">
+            <i class="fa-solid fa-file-zipper"></i> Download All
+          </button>
+        </div>
+      </div>
+
+      <div id="record-list" class="space-y-4"></div>
+    </div>
+  </section>
+
+  <!-- JS Logic -->
+  <script>
+    const form = document.getElementById("record-form");
+    const successMsg = document.getElementById("upload-success");
+    const recordList = document.getElementById("record-list");
+    const searchInput = document.getElementById("search");
+    const categoryFilter = document.getElementById("category-filter");
+    const downloadAllBtn = document.getElementById("download-all");
+
+    let records = JSON.parse(localStorage.getItem("records")) || [];
+
+    document.addEventListener("DOMContentLoaded", renderRecords);
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const title = document.getElementById("record-title").value;
+      const category = document.getElementById("record-category").value;
+      const fileInput = document.getElementById("record-file");
+      const file = fileInput.files[0];
+      const reader = new FileReader();
+
+      reader.onload = function() {
+        const record = {
+          title,
+          category,
+          name: file.name,
+          data: reader.result,
+          type: file.type.includes("pdf") ? "pdf" : "image"
+        };
+
+        records.push(record);
+        localStorage.setItem("records", JSON.stringify(records));
+        renderRecords();
+        successMsg.classList.remove("hidden");
+        form.reset();
+        setTimeout(() => successMsg.classList.add("hidden"), 3000);
+      };
+
+      reader.readAsDataURL(file);
+    });
+
+    function renderRecords() {
+      recordList.innerHTML = "";
+      const query = searchInput.value.toLowerCase();
+      const selectedCategory = categoryFilter.value;
+
+      const filtered = records.filter(record => {
+        const matchesSearch = record.title.toLowerCase().includes(query);
+        const matchesCategory = selectedCategory === "all" || record.category === selectedCategory;
+        return matchesSearch && matchesCategory;
+      });
+
+      if (filtered.length === 0) {
+        recordList.innerHTML = "<p class='text-gray-500 text-center'>No records found.</p>";
+        return;
+      }
+
+      filtered.forEach(record => {
+        const div = document.createElement("div");
+        div.className = "p-5 border rounded-xl bg-gray-50 hover:bg-gray-100 transition flex justify-between items-center";
+
+        div.innerHTML = `
+          <div>
+            <h4 class="font-semibold text-blue-700 text-lg flex items-center gap-2">
+              <i class="fa-solid fa-file-medical"></i> ${record.title}
+              <span class="text-xs font-medium px-2 py-1 rounded-full bg-blue-100 text-blue-700">${record.category}</span>
+            </h4>
+            <p class="text-gray-600 text-sm"><i class="fa-solid fa-file"></i> ${record.name}</p>
+          </div>
+          <div class="space-x-3">
+            <a href="${record.data}" target="_blank" class="text-green-600 hover:text-green-800"><i class="fa-solid fa-eye"></i></a>
+            <button class="text-red-500 hover:text-red-700 delete-btn"><i class="fa-solid fa-trash"></i></button>
+          </div>
+        `;
+
+        div.querySelector(".delete-btn").addEventListener("click", () => {
+          records = records.filter(item => item.name !== record.name);
+          localStorage.setItem("records", JSON.stringify(records));
+          renderRecords();
+        });
+
+        recordList.appendChild(div);
+      });
+    }
+
+    searchInput.addEventListener("input", renderRecords);
+    categoryFilter.addEventListener("change", renderRecords);
+
+    // 🗂️ Download All Records as ZIP
+    downloadAllBtn.addEventListener("click", async () => {
+      if (records.length === 0) return alert("No records to download.");
+
+      const zip = new JSZip();
+      records.forEach(record => {
+        const base64 = record.data.split(",")[1];
+        zip.file(record.name, base64, { base64: true });
+      });
+
+      const content = await zip.generateAsync({ type: "blob" });
+      saveAs(content, "My_Health_Records.zip");
+    });
+  </script>
+
+</body>
+</html>

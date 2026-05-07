@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Profile | HealthEase</title>
+
+  <!-- Tailwind CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+
+  <!-- Font Awesome -->
+  <script src="https://kit.fontawesome.com/a2e0adf6d2.js" crossorigin="anonymous"></script>
+</head>
+<body class="bg-gray-50 font-[Poppins,sans-serif]">
+
+  <!-- Header / Navbar (keeps app look consistent) -->
+  <header class="bg-white shadow-md py-4 fixed w-full top-0 z-20">
+    <div class="container mx-auto px-6 flex justify-between items-center">
+      <h1 class="text-2xl font-bold text-blue-600">🏥 HealthEase</h1>
+      <nav class="hidden md:flex items-center space-x-6">
+        <a href="dashboard.html" class="text-gray-600 hover:text-blue-600">Dashboard</a>
+        <a href="appointments.html" class="text-gray-600 hover:text-blue-600">Appointments</a>
+        <a href="records.html" class="text-gray-600 hover:text-blue-600">Records</a>
+        <a href="contact.html" class="text-gray-600 hover:text-blue-600">Contact</a>
+        <a href="profile.html" class="text-blue-600 font-semibold">Profile</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="pt-24 pb-12">
+    <div class="container mx-auto px-6 max-w-4xl">
+      <div class="bg-white rounded-2xl shadow-md p-8">
+
+        <!-- Top: avatar + name + edit button -->
+        <div class="flex items-center justify-between mb-6">
+          <div class="flex items-center gap-4">
+            <div id="avatar-wrapper" class="relative">
+              <img id="profile-avatar" src="" alt="Avatar" class="w-28 h-28 rounded-full object-cover border-2 border-blue-200">
+              <label for="avatar-input" title="Change photo" class="absolute right-0 bottom-0 bg-blue-600 text-white p-2 rounded-full cursor-pointer hover:bg-blue-700">
+                <i class="fas fa-camera"></i>
+              </label>
+              <input id="avatar-input" type="file" accept="image/*" class="hidden">
+            </div>
+            <div>
+              <h2 id="display-name" class="text-2xl font-bold text-gray-800">Your Name</h2>
+              <p id="display-role" class="text-sm text-gray-500">Patient • Member since 2025</p>
+            </div>
+          </div>
+
+          <div>
+            <button id="edit-btn" class="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded-lg mr-3">
+              <i class="fas fa-pen mr-2"></i>Edit Profile
+            </button>
+            <button id="save-btn" class="hidden bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg">
+              <i class="fas fa-check mr-2"></i>Save
+            </button>
+            <button id="cancel-btn" class="hidden bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-lg ml-2">
+              Cancel
+            </button>
+          </div>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-6">
+          <!-- Left: Profile fields (read-only view OR edit inputs) -->
+          <section class="space-y-4">
+            <div>
+              <label class="block text-sm text-gray-500">Full name</label>
+              <p id="view-name" class="text-lg font-medium text-gray-800">—</p>
+              <input id="input-name" class="hidden mt-2 w-full border rounded-lg px-4 py-2" />
+            </div>
+
+            <div>
+              <label class="block text-sm text-gray-500">Email</label>
+              <p id="view-email" class="text-gray-700">—</p>
+              <input id="input-email" type="email" class="hidden mt-2 w-full border rounded-lg px-4 py-2" />
+            </div>
+
+            <div>
+              <label class="block text-sm text-gray-500">Phone</label>
+              <p id="view-phone" class="text-gray-700">—</p>
+              <input id="input-phone" class="hidden mt-2 w-full border rounded-lg px-4 py-2" />
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm text-gray-500">Date of Birth</label>
+                <p id="view-dob" class="text-gray-700">—</p>
+                <input id="input-dob" type="date" class="hidden mt-2 w-full border rounded-lg px-4 py-2" />
+              </div>
+
+              <div>
+                <label class="block text-sm text-gray-500">Gender</label>
+                <p id="view-gender" class="text-gray-700">—</p>
+                <select id="input-gender" class="hidden mt-2 w-full border rounded-lg px-4 py-2">
+                  <option value="">Select</option>
+                  <option>Female</option>
+                  <option>Male</option>
+                  <option>Other</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-sm text-gray-500">Address</label>
+              <p id="view-address" class="text-gray-700">—</p>
+              <textarea id="input-address" rows="2" class="hidden mt-2 w-full border rounded-lg px-4 py-2"></textarea>
+            </div>
+          </section>
+
+          <!-- Right: Health summary -->
+          <aside class="bg-gray-50 p-4 rounded-xl">
+            <div class="flex justify-between items-start mb-3">
+              <h3 class="text-lg font-semibold text-blue-700">Health Summary</h3>
+              <span id="edit-summary-btn" class="text-sm text-gray-500 cursor-pointer hover:text-gray-700"><i class="fas fa-pen"></i> edit</span>
+            </div>
+
+            <div id="summary-view" class="space-y-3">
+              <div>
+                <p class="text-sm text-gray-500">Blood Pressure</p>
+                <p id="view-bp" class="font-medium text-gray-700">—</p>
+              </div>
+              <div>
+                <p class="text-sm text-gray-500">Weight</p>
+                <p id="view-weight" class="font-medium text-gray-700">—</p>
+              </div>
+              <div>
+                <p class="text-sm text-gray-500">Height</p>
+                <p id="view-height" class="font-medium text-gray-700">—</p>
+              </div>
+              <div>
+                <p class="text-sm text-gray-500">BMI</p>
+                <p id="view-bmi" class="font-medium text-gray-700">—</p>
+              </div>
+              <div>
+                <p class="text-sm text-gray-500">Allergies</p>
+                <p id="view-allergies" class="font-medium text-gray-700 italic">—</p>
+              </div>
+            </div>
+
+            <form id="summary-form" class="hidden space-y-3 mt-2">
+              <div>
+                <label class="block text-sm text-gray-500">Blood Pressure</label>
+                <input id="input-bp" class="w-full border rounded-lg px-3 py-2" placeholder="e.g. 120/80" />
+              </div>
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-sm text-gray-500">Weight (kg)</label>
+                  <input id="input-weight" type="number" class="w-full border rounded-lg px-3 py-2" />
+                </div>
+                <div>
+                  <label class="block text-sm text-gray-500">Height (cm)</label>
+                  <input id="input-height" type="number" class="w-full border rounded-lg px-3 py-2" />
+                </div>
+              </div>
+              <div>
+                <label class="block text-sm text-gray-500">Allergies</label>
+                <input id="input-allergies" class="w-full border rounded-lg px-3 py-2" placeholder="e.g. Penicillin" />
+              </div>
+              <div class="flex justify-end gap-2">
+                <button type="button" id="save-summary" class="bg-green-600 text-white px-4 py-2 rounded-lg">Save</button>
+                <button type="button" id="cancel-summary" class="bg-gray-200 px-4 py-2 rounded-lg">Cancel</button>
+              </div>
+            </form>
+          </aside>
+        </div>
+
+        <div id="status" class="mt-6 text-sm text-green-600 hidden">Saved!</div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Keys used in localStorage
+    const STORAGE_KEY = 'healtheast_profile_v1';
+
+    // Elements
+    const editBtn = document.getElementById('edit-btn');
+    const saveBtn = document.getElementById('save-btn');
+    const cancelBtn = document.getElementById('cancel-btn');
+    const avatarInput = document.getElementById('avatar-input');
+    const profileAvatar = document.getElementById('profile-avatar');
+
+    // Display fields
+    const displayName = document.getElementById('display-name');
+    const displayRole = document.getElementById('display-role');
+    const viewName = document.getElementById('view-name');
+    const viewEmail = document.getElementById('view-email');
+    const viewPhone = document.getElementById('view-phone');
+    const viewDob = document.getElementById('view-dob');
+    const viewGender = document.getElementById('view-gender');
+    const viewAddress = document.getElementById('view-address');
+
+    // Inputs
+    const inputName = document.getElementById('input-name');
+    const inputEmail = document.getElementById('input-email');
+    const inputPhone = document.getElementById('input-phone');
+    const inputDob = document.getElementById('input-dob');
+    const inputGender = document.getElementById('input-gender');
+    const inputAddress = document.getElementById('input-address');
+
+    // Summary
+    const editSummaryBtn = document.getElementById('edit-summary-btn');
+    const summaryForm = document.getElementById('summary-form');
+    const summaryView = document.getElementById('summary-view');
+    const saveSummary = document.getElementById('save-summary');
+    const cancelSummary = document.getElementById('cancel-summary');
+
+    const viewBp = document.getElementById('view-bp');
+    const viewWeight = document.getElementById('view-weight');
+    const viewHeight = document.getElementById('view-height');
+    const viewBmi = document.getElementById('view-bmi');
+    const viewAllergies = document.getElementById('view-allergies');
+
+    const inputBp = document.getElementById('input-bp');
+    const inputWeight = document.getElementById('input-weight');
+    const inputHeight = document.getElementById('input-height');
+    const inputAllergies = document.getElementById('input-allergies');
+
+    const status = document.getElementById('status');
+
+    // Default profile
+    const defaultProfile = {
+      name: 'Your Name',
+      role: 'Patient',
+      email: 'you@example.com',
+      phone: '+234 000 000 0000',
+      dob: '',
+      gender: '',
+      address: '',
+      avatar: '', // dataURL
+      summary: {
+        bp: '—',
+        weight: '',
+        height: '',
+        bmi: '',
+        allergies: ''
+      }
+    };
+
+    // Load profile from localStorage or use defaults
+    function loadProfile() {
+      const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+      const profile = saved || defaultProfile;
+
+      // Avatar
+      if (profile.avatar) profileAvatar.src = profile.avatar;
+      else profileAvatar.src = 'https://cdn.jsdelivr.net/gh/encharm/Font-Awesome-SVG-PNG@master/black/svg/user-circle.svg';
+
+      // Basic
+      displayName.textContent = profile.name || defaultProfile.name;
+      displayRole.textContent = profile.role ? `${profile.role} • Member since 2025` : 'Patient • Member since 2025';
+
+      viewName.textContent = profile.name || '—';
+      viewEmail.textContent = profile.email || '—';
+      viewPhone.textContent = profile.phone || '—';
+      viewDob.textContent = profile.dob || '—';
+      viewGender.textContent = profile.gender || '—';
+      viewAddress.textContent = profile.address || '—';
+
+      // Summary
+      viewBp.textContent = profile.summary.bp || '—';
+      viewWeight.textContent = profile.summary.weight ? `${profile.summary.weight} kg` : '—';
+      viewHeight.textContent = profile.summary.height ? `${profile.summary.height} cm` : '—';
+      viewBmi.textContent = profile.summary.bmi || '—';
+      viewAllergies.textContent = profile.summary.allergies || '—';
+
+      // Populate inputs for edit mode
+      inputName.value = profile.name || '';
+      inputEmail.value = profile.email || '';
+      inputPhone.value = profile.phone || '';
+      inputDob.value = profile.dob || '';
+      inputGender.value = profile.gender || '';
+      inputAddress.value = profile.address || '';
+
+      inputBp.value = profile.summary.bp || '';
+      inputWeight.value = profile.summary.weight || '';
+      inputHeight.value = profile.summary.height || '';
+      inputAllergies.value = profile.summary.allergies || '';
+    }
+
+    // Toggle edit mode
+    function enterEditMode() {
+      // show inputs
+      document.querySelectorAll('#input-name, #input-email, #input-phone, #input-dob, #input-gender, #input-address').forEach(el => el.classList.remove('hidden'));
+      // hide view paragraphs
+      document.querySelectorAll('#view-name, #view-email, #view-phone, #view-dob, #view-gender, #view-address').forEach(el => el.classList.add('hidden'));
+
+      editBtn.classList.add('hidden');
+      saveBtn.classList.remove('hidden');
+      cancelBtn.classList.remove('hidden');
+    }
+
+    function exitEditMode() {
+      document.querySelectorAll('#input-name, #input-email, #input-phone, #input-dob, #input-gender, #input-address').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('#view-name, #view-email, #view-phone, #view-dob, #view-gender, #view-address').forEach(el => el.classList.remove('hidden'));
+
+      editBtn.classList.remove('hidden');
+      saveBtn.classList.add('hidden');
+      cancelBtn.classList.add('hidden');
+    }
+
+    // Avatar upload
+    avatarInput.addEventListener('change', function () {
+      const file = avatarInput.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        profileAvatar.src = reader.result;
+      };
+      reader.readAsDataURL(file);
+    });
+
+    // Save profile
+    saveBtn.addEventListener('click', () => {
+      const profile = {
+        name: inputName.value || defaultProfile.name,
+        role: defaultProfile.role,
+        email: inputEmail.value,
+        phone: inputPhone.value,
+        dob: inputDob.value,
+        gender: inputGender.value,
+        address: inputAddress.value,
+        avatar: profileAvatar.src || '',
+        summary: {
+          bp: inputBp.value || '—',
+          weight: inputWeight.value || '',
+          height: inputHeight.value || '',
+          bmi: computeBmi(inputWeight.value, inputHeight.value),
+          allergies: inputAllergies.value || ''
+        }
+      };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(profile));
+      loadProfile();
+      exitEditMode();
+      // show saved status briefly
+      status.classList.remove('hidden');
+      setTimeout(() => status.classList.add('hidden'), 1600);
+    });
+
+    // Cancel edits
+    cancelBtn.addEventListener('click', () => {
+      loadProfile();
+      exitEditMode();
+    });
+
+    // Summary edit toggle
+    editSummaryBtn.addEventListener('click', () => {
+      summaryForm.classList.remove('hidden');
+      summaryView.classList.add('hidden');
+    });
+
+    cancelSummary.addEventListener('click', () => {
+      summaryForm.classList.add('hidden');
+      summaryView.classList.remove('hidden');
+    });
+
+    saveSummary.addEventListener('click', () => {
+      const saved = JSON.parse(localStorage.getItem(STORAGE_KEY)) || defaultProfile;
+      saved.summary.bp = inputBp.value || '—';
+      saved.summary.weight = inputWeight.value || '';
+      saved.summary.height = inputHeight.value || '';
+      saved.summary.bmi = computeBmi(inputWeight.value, inputHeight.value);
+      saved.summary.allergies = inputAllergies.value || '';
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(saved));
+      loadProfile();
+      summaryForm.classList.add('hidden');
+      summaryView.classList.remove('hidden');
+      status.classList.remove('hidden');
+      setTimeout(() => status.classList.add('hidden'), 1600);
+    });
+
+    // Edit button
+    editBtn.addEventListener('click', enterEditMode);
+
+    // simple BMI compute
+    function computeBmi(weightKg, heightCm) {
+      const w = parseFloat(weightKg);
+      const h = parseFloat(heightCm);
+      if (!w || !h) return '';
+      const heightM = h / 100;
+      const bmi = w / (heightM * heightM);
+      return bmi ? bmi.toFixed(1) : '';
+    }
+
+    // Initialize
+    loadProfile();
+    exitEditMode();
+  </script>
+</body>
+</html>
